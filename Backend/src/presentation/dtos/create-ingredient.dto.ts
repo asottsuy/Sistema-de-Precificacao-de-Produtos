@@ -5,11 +5,11 @@ import { IsString, IsNumber, MinLength } from 'class-validator';
 export class CreateIngredientDto {
   @IsString()
   @MinLength(3)
-  name: string;
+  name!: string;
 
   @IsNumber()
-  costPrice: number;
+  costPrice!: number;
 
   @IsString()
-  unit: string;
+  unit!: string;
 }
