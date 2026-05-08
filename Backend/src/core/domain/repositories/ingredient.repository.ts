@@ -3,6 +3,7 @@
 import { Ingredient } from '../entities/ingredient.entity';
 
 // Esse é o "contrato"
+//responsavel pela abstração e acesso ao banco de dados
 export abstract class IngredientRepository {
   abstract save(ingredient: Ingredient): Promise<void>;
 }

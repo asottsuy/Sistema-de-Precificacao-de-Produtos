@@ -1,16 +1,21 @@
 import { Injectable } from '@nestjs/common';
 import { Ingredient } from '../../domain/entities/ingredient.entity';
 import { CreateIngredientDto } from '../../../presentation/dtos/create-ingredient.dto';
+import { IngredientRepository } from '@core/domain/repositories/ingredient.repository';
 
 @Injectable()
 export class CreateIngredientUseCase {
-  // Nota: Para ser 100% Clean, injetaríamos um repositório aqui futuramente
-  execute(dto: CreateIngredientDto): Promise<Ingredient> {
+  // Agora o Use Case tem uma ferramenta para falar com o mundo externo
+  constructor(private readonly ingredientRepository: IngredientRepository) {}
+
+  async execute(dto: CreateIngredientDto): Promise<Ingredient> {
+    // 1. Criamos a entidade de domínio (Regra de Negócio)
     const ingredient = new Ingredient(null, dto.name, dto.costPrice, dto.unit);
 
-    // Aqui você adicionaria a chamada para o banco
-    console.log('Ingrediente pronto para ser salvo:', ingredient);
+    // 2. Chamamos o repositório (Persistência)
+    // Aqui o dado realmente vai para o seu banco 'precifica_db'
+    await this.ingredientRepository.save(ingredient);
 
-    return Promise.resolve(ingredient);
+    return ingredient;
   }
 }

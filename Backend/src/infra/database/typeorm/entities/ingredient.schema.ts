@@ -3,7 +3,7 @@ import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 @Entity('ingredients')
 export class IngredientSchema {
   @PrimaryGeneratedColumn()
-  id!: number;
+  id!: number | null;
 
   @Column({ length: 100 })
   name!: string;
