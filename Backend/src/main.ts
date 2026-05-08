@@ -3,14 +3,15 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import 'reflect-metadata';
-import { HttpExceptionFilter } from './presentation/common/filters/http-exception.filter';
+import { AllExceptionFilter } from './presentation/common/filters/http-exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.setGlobalPrefix('api/v1');
-  app.useGlobalFilters(new HttpExceptionFilter());
+  app.useGlobalFilters(new AllExceptionFilter());
   app.useGlobalPipes(
     new ValidationPipe({
+      //o pipe fica antes de chegar ao controller
       whitelist: true, // Remove campos extras enviados no JSON
       forbidNonWhitelisted: true, // Retorna erro se enviarem campos extras
       transform: true, // Converte os tipos automaticamente (ex: string para number)
