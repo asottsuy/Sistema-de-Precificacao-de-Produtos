@@ -1,8 +1,4 @@
-import {
-  ConflictException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { Ingredient } from '../../domain/entities/ingredient.entity';
 import { CreateIngredientDto } from '../../../presentation/dtos/create-ingredient.dto';
 import { IngredientRepository } from '@core/domain/repositories/ingredient.repository';
@@ -26,33 +22,9 @@ export class CreateIngredientUseCase {
 
     // 2. Chamamos o repositório (Persistência)
     // Aqui o dado realmente vai para o seu banco 'precifica_db'
-    await this.ingredientRepository.save(ingredient);
+    const savedIngredient = await this.ingredientRepository.save(ingredient);
+    console.log('ingrediente no usecase: ', ingredient);
 
-    return ingredient;
-  }
-}
-
-@Injectable()
-export class ListIngredientsUseCase {
-  constructor(private readonly ingredientRepository: IngredientRepository) {}
-
-  async execute(): Promise<Ingredient[]> {
-    return this.ingredientRepository.findAll();
-  }
-}
-
-//use case para buscar ingrediente por ID
-@Injectable()
-export class GetIngredientUseCase {
-  constructor(private readonly repository: IngredientRepository) {}
-
-  async execute(id: number) {
-    const ingredient = await this.repository.findById(id);
-
-    if (!ingredient) {
-      throw new NotFoundException('Ingrediente não encontrado.');
-    }
-
-    return ingredient;
+    return savedIngredient;
   }
 }

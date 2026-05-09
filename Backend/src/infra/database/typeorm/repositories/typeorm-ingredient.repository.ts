@@ -13,16 +13,16 @@ export class TypeOrmIngredientRepository implements IngredientRepository {
     private readonly repository: Repository<IngredientSchema>,
   ) {}
 
-  async save(ingredient: Ingredient): Promise<void> {
-    // Mapeamos a Entidade de Domínio para o Schema do TypeORM
-    const schema = this.repository.create({
-      id: ingredient.id ?? undefined,
-      name: ingredient.name,
-      costPrice: ingredient.costPrice,
-      unit: ingredient.unit,
-    });
+  async save(ingredient: Ingredient): Promise<Ingredient> {
+    const schema = this.repository.create(ingredient);
+    const savedSchema = await this.repository.save(schema);
 
-    await this.repository.save(schema);
+    return new Ingredient(
+      savedSchema.id,
+      savedSchema.name,
+      savedSchema.costPrice,
+      savedSchema.unit,
+    );
   }
 
   async findByName(name: string): Promise<Ingredient | null> {
@@ -62,5 +62,9 @@ export class TypeOrmIngredientRepository implements IngredientRepository {
       schema.costPrice,
       schema.unit,
     );
+  }
+
+  async deleteById(id: number): Promise<void> {
+    await this.repository.delete(id);
   }
 }

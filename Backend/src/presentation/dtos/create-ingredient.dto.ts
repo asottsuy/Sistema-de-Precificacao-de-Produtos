@@ -5,6 +5,7 @@ import {
   IsNotEmpty,
   Min,
 } from 'class-validator';
+import { PartialType } from '@nestjs/mapped-types';
 //É a biblioteca que realmente faz o check. Ela verifica se o nome é uma string, se o preço é um número positivo, etc.
 //class-transformer: O NestJS usa essa biblioteca para converter o JSON que vem da internet em uma instância da sua classe DTO. Sem ela, o ValidationPipe não consegue "ler" as anotações.
 
@@ -24,3 +25,6 @@ export class CreateIngredientDto {
   @IsNotEmpty({ message: 'A unidade de medida é obrigatória' })
   readonly unit!: string;
 }
+
+export class UpdateIngredientDto extends PartialType(CreateIngredientDto) {}
+//Usamos o PartialType para dizer que os campos são opcionais
