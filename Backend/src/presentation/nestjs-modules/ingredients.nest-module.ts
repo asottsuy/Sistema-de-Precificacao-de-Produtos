@@ -5,6 +5,7 @@ import { IngredientSchema } from '@infra/database/typeorm/entities/ingredient.sc
 import {
   CreateIngredientUseCase,
   ListIngredientsUseCase,
+  GetIngredientUseCase,
 } from '@core/application/use-cases/create-ingredient.use-case';
 import { IngredientRepository } from '@core/domain/repositories/ingredient.repository';
 import { TypeOrmIngredientRepository } from '@infra/database/typeorm/repositories/typeorm-ingredient.repository';
@@ -19,6 +20,7 @@ import { TypeOrmIngredientRepository } from '@infra/database/typeorm/repositorie
     // Aqui você coloca os Use Cases e Repositórios
     CreateIngredientUseCase, //usecase de ingrediente
     ListIngredientsUseCase,
+    GetIngredientUseCase,
     {
       provide: IngredientRepository, //Injeção de dependencia, toda vez que o usecase solicitar o IngredientRepository, ele não sabe de fato como o dado é salvo no banco, ele conhece apenas a abrastração.
       //Portanto, esse objeto dentro dos providers no nest passa para ele um objeto (classe) de TypeORmIngredientes.

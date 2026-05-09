@@ -1,4 +1,8 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { Ingredient } from '../../domain/entities/ingredient.entity';
 import { CreateIngredientDto } from '../../../presentation/dtos/create-ingredient.dto';
 import { IngredientRepository } from '@core/domain/repositories/ingredient.repository';
@@ -34,5 +38,21 @@ export class ListIngredientsUseCase {
 
   async execute(): Promise<Ingredient[]> {
     return this.ingredientRepository.findAll();
+  }
+}
+
+//use case para buscar ingrediente por ID
+@Injectable()
+export class GetIngredientUseCase {
+  constructor(private readonly repository: IngredientRepository) {}
+
+  async execute(id: number) {
+    const ingredient = await this.repository.findById(id);
+
+    if (!ingredient) {
+      throw new NotFoundException('Ingrediente não encontrado.');
+    }
+
+    return ingredient;
   }
 }

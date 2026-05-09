@@ -51,4 +51,16 @@ export class TypeOrmIngredientRepository implements IngredientRepository {
         new Ingredient(schema.id, schema.name, schema.costPrice, schema.unit),
     );
   }
+
+  async findById(id: number): Promise<Ingredient | null> {
+    const schema = await this.repository.findOneBy({ id });
+    if (!schema) return null;
+
+    return new Ingredient(
+      schema.id,
+      schema.name,
+      schema.costPrice,
+      schema.unit,
+    );
+  }
 }
