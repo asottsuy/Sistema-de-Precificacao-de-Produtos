@@ -42,4 +42,13 @@ export class TypeOrmIngredientRepository implements IngredientRepository {
       ingredientSchema.unit,
     );
   }
+
+  async findAll(): Promise<Ingredient[]> {
+    const schemas = await this.repository.find();
+
+    return schemas.map(
+      (schema) =>
+        new Ingredient(schema.id, schema.name, schema.costPrice, schema.unit),
+    );
+  }
 }

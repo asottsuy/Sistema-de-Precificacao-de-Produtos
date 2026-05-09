@@ -27,3 +27,12 @@ export class CreateIngredientUseCase {
     return ingredient;
   }
 }
+
+@Injectable()
+export class ListIngredientsUseCase {
+  constructor(private readonly ingredientRepository: IngredientRepository) {}
+
+  async execute(): Promise<Ingredient[]> {
+    return this.ingredientRepository.findAll();
+  }
+}

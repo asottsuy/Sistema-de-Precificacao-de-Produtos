@@ -7,4 +7,5 @@ import { Ingredient } from '../entities/ingredient.entity';
 export abstract class IngredientRepository {
   abstract save(ingredient: Ingredient): Promise<void>;
   abstract findByName(name: string): Promise<Ingredient | null>;
+  abstract findAll(): Promise<Ingredient[]>;
 }
