@@ -24,4 +24,22 @@ export class TypeOrmIngredientRepository implements IngredientRepository {
 
     await this.repository.save(schema);
   }
+
+  async findByName(name: string): Promise<Ingredient | null> {
+    const ingredientSchema = await this.repository.findOne({
+      where: { name: name },
+    });
+
+    if (!ingredientSchema) {
+      //se o nome não existir
+      return null;
+    }
+
+    return new Ingredient(
+      ingredientSchema.id,
+      ingredientSchema.name,
+      ingredientSchema.costPrice,
+      ingredientSchema.unit,
+    );
+  }
 }

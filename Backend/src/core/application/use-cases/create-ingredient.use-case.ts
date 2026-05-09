@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { Ingredient } from '../../domain/entities/ingredient.entity';
 import { CreateIngredientDto } from '../../../presentation/dtos/create-ingredient.dto';
 import { IngredientRepository } from '@core/domain/repositories/ingredient.repository';
@@ -10,6 +10,14 @@ export class CreateIngredientUseCase {
 
   async execute(dto: CreateIngredientDto): Promise<Ingredient> {
     // 1. Criamos a entidade de domínio (Regra de Negócio)
+    // vamos validar se o ingrediente já existe
+    const alreadyExists = await this.ingredientRepository.findByName(
+      dto.name, //chama a abstração de findbyname
+    );
+    if (alreadyExists) {
+      //lança o erro se existir
+      throw new ConflictException('Esse ingrediente já existe!');
+    }
     const ingredient = new Ingredient(null, dto.name, dto.costPrice, dto.unit);
 
     // 2. Chamamos o repositório (Persistência)

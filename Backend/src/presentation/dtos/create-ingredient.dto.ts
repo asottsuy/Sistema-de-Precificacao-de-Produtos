@@ -13,13 +13,14 @@ export class CreateIngredientDto {
   @IsString()
   @IsNotEmpty({ message: 'O nome do ingrediente é obrigatório' })
   @MinLength(3)
-  name!: string;
+  readonly name!: string;
+  //o readonly é um modificador do ts que serve para deixar a prop imutável. ou seja, esse dado não pode mais ser alterado durante o resto do processo.
 
   @IsNumber({ maxDecimalPlaces: 2 })
   @Min(0, { message: 'O preço de custo não pode ser negativo' })
-  costPrice!: number;
+  readonly costPrice!: number;
 
   @IsString()
   @IsNotEmpty({ message: 'A unidade de medida é obrigatória' })
-  unit!: string;
+  readonly unit!: string;
 }

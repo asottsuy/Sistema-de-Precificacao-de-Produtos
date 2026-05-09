@@ -6,4 +6,5 @@ import { Ingredient } from '../entities/ingredient.entity';
 //responsavel pela abstração e acesso ao banco de dados
 export abstract class IngredientRepository {
   abstract save(ingredient: Ingredient): Promise<void>;
+  abstract findByName(name: string): Promise<Ingredient | null>;
 }
