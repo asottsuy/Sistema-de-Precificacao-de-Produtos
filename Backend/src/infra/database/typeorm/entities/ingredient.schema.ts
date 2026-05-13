@@ -13,4 +13,7 @@ export class IngredientSchema {
 
   @Column()
   unit!: string;
+
+  @Column({ type: 'decimal', precision: 10, scale: 2 })
+  packageSize!: number;
 }

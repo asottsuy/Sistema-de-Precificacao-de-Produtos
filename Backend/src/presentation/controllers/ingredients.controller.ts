@@ -10,7 +10,6 @@ import {
   HttpCode,
   Patch,
 } from '@nestjs/common';
-import { UnitValidationPipe } from '@presentation/pipes/unit-validation.pipe';
 //use cases
 import { CreateIngredientUseCase } from '@core/application/use-cases/create-ingredient.use-case';
 import { UpdateIngredientUseCase } from '@core/application/use-cases/update-ingredient.use-case';
@@ -34,7 +33,6 @@ export class IngredientsController {
   ) {}
 
   @Post()
-  @UsePipes(new UnitValidationPipe())
   async create(@Body() createIngredientDto: CreateIngredientDto) {
     return this.createIngredientUseCase.execute(createIngredientDto);
   }

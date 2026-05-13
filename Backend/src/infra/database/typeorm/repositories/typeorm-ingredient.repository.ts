@@ -22,6 +22,7 @@ export class TypeOrmIngredientRepository implements IngredientRepository {
       savedSchema.name,
       savedSchema.costPrice,
       savedSchema.unit,
+      savedSchema.packageSize,
     );
   }
 
@@ -40,6 +41,7 @@ export class TypeOrmIngredientRepository implements IngredientRepository {
       ingredientSchema.name,
       ingredientSchema.costPrice,
       ingredientSchema.unit,
+      ingredientSchema.packageSize,
     );
   }
 
@@ -48,7 +50,13 @@ export class TypeOrmIngredientRepository implements IngredientRepository {
 
     return schemas.map(
       (schema) =>
-        new Ingredient(schema.id, schema.name, schema.costPrice, schema.unit),
+        new Ingredient(
+          schema.id,
+          schema.name,
+          schema.costPrice,
+          schema.unit,
+          schema.packageSize,
+        ),
     );
   }
 
@@ -61,6 +69,7 @@ export class TypeOrmIngredientRepository implements IngredientRepository {
       schema.name,
       schema.costPrice,
       schema.unit,
+      schema.packageSize,
     );
   }
 

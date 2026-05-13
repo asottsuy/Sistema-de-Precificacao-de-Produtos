@@ -39,6 +39,7 @@ describe('Ingredients (e2e)', () => {
           name: 'Cafe Arabica',
           costPrice: 135.5,
           unit: 'kg',
+          packageSize: 1,
         });
 
       expect(response.status).toBe(201);
@@ -62,12 +63,12 @@ describe('Ingredients (e2e)', () => {
       // Primeiro criamos um
       await request(app.getHttpServer())
         .post('/ingredients')
-        .send({ name: 'Repetido', costPrice: 10, unit: 'un' });
+        .send({ name: 'Repetido', costPrice: 10, unit: 'un', packageSize: 1 });
 
       // Tentamos criar o mesmo nome novamente
       const response = await request(app.getHttpServer())
         .post('/ingredients')
-        .send({ name: 'Repetido', costPrice: 20, unit: 'un' });
+        .send({ name: 'Repetido', costPrice: 20, unit: 'un', packageSize: 1 });
 
       expect(response.status).toBe(409); // ConflictException
       expect(response.body.message).toBe('Esse ingrediente já existe!');
@@ -84,6 +85,7 @@ describe('Ingredients (e2e)', () => {
           name: 'Ingrediente para Deletar',
           costPrice: 10,
           unit: 'un',
+          packageSize: 1,
         });
 
       const id = createRes.body.id;
@@ -123,7 +125,12 @@ describe('Ingredients (e2e)', () => {
       // 1. Criamos o ingrediente
       const createRes = await request(app.getHttpServer())
         .post('/ingredients')
-        .send({ name: 'Café para Update', costPrice: 100, unit: 'kg' });
+        .send({
+          name: 'Café para Update',
+          costPrice: 100,
+          unit: 'kg',
+          packageSize: 1,
+        });
 
       const id = createRes.body.id;
 
@@ -144,11 +151,11 @@ describe('Ingredients (e2e)', () => {
       // Criamos dois insumos
       await request(app.getHttpServer())
         .post('/ingredients')
-        .send({ name: 'Ovo', costPrice: 0.8, unit: 'un' });
+        .send({ name: 'Cafe', costPrice: 38.0, unit: 'g', packageSize: 250 });
 
       await request(app.getHttpServer())
         .post('/ingredients')
-        .send({ name: 'Farinha', costPrice: 5.0, unit: 'kg' });
+        .send({ name: 'Leite', costPrice: 6.8, unit: 'l', packageSize: 1 });
 
       const response = await request(app.getHttpServer()).get('/ingredients');
 

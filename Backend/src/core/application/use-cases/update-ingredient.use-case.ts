@@ -22,6 +22,7 @@ export class UpdateIngredientUseCase {
       dto.name ?? ingredient.name,
       dto.costPrice ?? ingredient.costPrice,
       dto.unit ?? ingredient.unit,
+      dto.packageSize ?? ingredient.packageSize,
     );
 
     return this.repository.save(updatedIngredient);

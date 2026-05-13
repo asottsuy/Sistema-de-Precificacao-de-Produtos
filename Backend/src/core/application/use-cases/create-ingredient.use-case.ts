@@ -18,12 +18,17 @@ export class CreateIngredientUseCase {
       //lança o erro se existir
       throw new ConflictException('Esse ingrediente já existe!');
     }
-    const ingredient = new Ingredient(null, dto.name, dto.costPrice, dto.unit);
+    const ingredient = new Ingredient(
+      null,
+      dto.name,
+      dto.costPrice,
+      dto.unit,
+      dto.packageSize,
+    );
 
     // 2. Chamamos o repositório (Persistência)
     // Aqui o dado realmente vai para o seu banco 'precifica_db'
     const savedIngredient = await this.ingredientRepository.save(ingredient);
-    console.log('ingrediente no usecase: ', ingredient);
 
     return savedIngredient;
   }

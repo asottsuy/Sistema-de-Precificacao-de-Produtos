@@ -4,6 +4,8 @@ import {
   IsArray,
   ValidateNested,
   IsNotEmpty,
+  Min,
+  IsPositive,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 
@@ -22,9 +24,6 @@ export class CreateProductDto {
 
   @IsString()
   description!: string;
-
-  @IsNumber()
-  salePrice!: number;
 
   @IsArray()
   @ValidateNested({ each: true })

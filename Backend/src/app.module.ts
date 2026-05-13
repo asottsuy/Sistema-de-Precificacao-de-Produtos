@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { AppController } from '@presentation/controllers/app.controller';
 import { IngredientsNestModule } from '@presentation/nestjs-modules/ingredients.nest-module';
+import { ProductsNestModule } from '@presentation/nestjs-modules/product.nest-modules';
 
 @Module({
   imports: [
@@ -17,7 +19,9 @@ import { IngredientsNestModule } from '@presentation/nestjs-modules/ingredients.
       synchronize: true, // Isso faz o TypeORM criar as tabelas automaticamente
     }),
     IngredientsNestModule,
+    ProductsNestModule,
   ],
+  controllers: [AppController],
 })
 export class AppModule {}
 

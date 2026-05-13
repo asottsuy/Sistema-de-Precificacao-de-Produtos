@@ -11,6 +11,7 @@ import { UpdateIngredientUseCase } from '@core/application/use-cases/update-ingr
 import { ListIngredientsUseCase } from '@core/application/use-cases/list-ingredient.use-case';
 import { GetIngredientUseCase } from '@core/application/use-cases/get-ingredients.use-case';
 import { DeleteIngredientUseCase } from '@core/application/use-cases/delete-ingredients.use-case';
+
 //Este arquivo é a "cola" do NestJS para o recurso de ingredientes. Ele registra a entidade no banco e liga o controller ao caso de uso.
 @Module({
   imports: [
@@ -32,5 +33,6 @@ import { DeleteIngredientUseCase } from '@core/application/use-cases/delete-ingr
       useClass: TypeOrmIngredientRepository,
     },
   ],
+  exports: [IngredientRepository],
 })
 export class IngredientsNestModule {}

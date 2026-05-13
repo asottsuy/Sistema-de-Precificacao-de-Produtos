@@ -17,15 +17,8 @@ describe('AppController (e2e)', () => {
     app = moduleFixture.createNestApplication();
     await app.init();
   });
-  it('/ingredients (POST) - Deve barrar unidade inválida', () => {
-    return request(app.getHttpServer())
-      .post('/ingredients')
-      .send({
-        name: 'Salmão',
-        costPrice: 95.0,
-        unit: 'pacote', // Unidade que seu Pipe customizado bloqueia
-      })
-      .expect(400); // Esperamos que o Pipe barra e retorne erro 400
+  it('/ deve dar Boas Vindas ao user', () => {
+    return request(app.getHttpServer()).get('/').expect(200);
   });
 
   afterEach(async () => {

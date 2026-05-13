@@ -7,7 +7,7 @@ import { AllExceptionFilter } from './presentation/common/filters/http-exception
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.setGlobalPrefix('api/v1');
+  app.setGlobalPrefix('manager/');
   app.useGlobalFilters(new AllExceptionFilter());
   app.useGlobalPipes(
     new ValidationPipe({
@@ -21,7 +21,7 @@ async function bootstrap() {
   const port = process.env.PORT ?? 3000;
   await app.listen(port);
 
-  console.log(`🚀 Aplicação rodando em: http://localhost:${port}/api/v1`);
+  console.log(`🚀 Aplicação rodando em: http://localhost:${port}/manager`);
 }
 bootstrap();
 
