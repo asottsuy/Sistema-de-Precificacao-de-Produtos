@@ -18,8 +18,8 @@ export class ProductSchema {
   @Column()
   description!: string;
 
-  // @Column('decimal', { precision: 10, scale: 2 })
-  // salePrice?: number;
+  @Column('decimal', { precision: 10, scale: 2 })
+  salePrice?: number;
 
   // Relação com a Ficha Técnica
   @OneToMany(() => ProductItemSchema, (item) => item.product, { cascade: true })

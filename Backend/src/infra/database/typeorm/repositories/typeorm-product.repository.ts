@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ProductRepository } from '@core/domain/repositories/product.repository';
-import { Product } from '@core/domain/entities/product.entity';
-import { ProductSchema, ProductItemSchema } from '../entities/product.schema';
+import { Product, ProductItem } from '@core/domain/entities/product.entity';
+import { ProductSchema } from '../entities/product.schema';
 
 @Injectable()
 export class TypeOrmProductRepository implements ProductRepository {
@@ -17,11 +17,9 @@ export class TypeOrmProductRepository implements ProductRepository {
       id: product.id || undefined,
       name: product.name,
       description: product.description,
+      salePrice: product.salePrice ?? 0,
       items: product.items.map((item) => ({
-        // 1. A relação: apontamos para o ID do ingrediente
         ingredient: { id: item.ingredientId },
-
-        // 2. Os valores: devem estar no primeiro nível do objeto do item
         quantity: item.quantity,
         pricePerUnit: Number(item.ingredientCostPrice),
       })),
@@ -29,28 +27,67 @@ export class TypeOrmProductRepository implements ProductRepository {
 
     const savedSchema = await this.repository.save(schema);
 
-    // Reconstruímos a entidade de domínio para garantir que o ID do banco volte
     return new Product(
       savedSchema.id,
       savedSchema.name,
       savedSchema.description,
       product.items,
+      Number(savedSchema.salePrice),
     );
   }
 
   async findById(id: number): Promise<Product | null> {
-    const product = await this.repository.findOne({
+    const productSchema = await this.repository.findOne({
       where: { id },
-      relations: ['items', 'items.ingredient'], // Carrega a ficha técnica e os dados do ingrediente
+      relations: ['items', 'items.ingredient'],
     });
 
-    if (!product) return null;
+    if (!productSchema) return null;
 
-    // Aqui você faria o mapeamento inverso (Schema -> Entidade)
-    return null; // Implementar mapeamento
+    const domainItems = productSchema.items.map((item) => {
+      return new ProductItem(
+        item.ingredient.id!,
+        Number(item.quantity),
+        Number(item.pricePerUnit),
+      );
+    });
+
+    // CORRIGIDO: Agora o preço mapeado do banco é passado corretamente
+    return new Product(
+      productSchema.id,
+      productSchema.name,
+      productSchema.description,
+      domainItems,
+      Number(productSchema.salePrice || 0),
+    );
   }
 
   async findAll(): Promise<Product[]> {
-    return []; // Implementar listagem
+    const schemas = await this.repository.find({
+      relations: ['items', 'items.ingredient'], // Traz as relações para o cálculo de CMV funcionar na listagem
+    });
+
+    return schemas.map((schema) => {
+      const domainItems =
+        schema.items?.map((item) => {
+          return new ProductItem(
+            item.ingredient.id!,
+            Number(item.quantity),
+            Number(item.pricePerUnit),
+          );
+        }) || [];
+
+      return new Product(
+        schema.id,
+        schema.name,
+        schema.description,
+        domainItems,
+        Number(schema.salePrice || 0),
+      );
+    });
+  }
+
+  async delete(id: number): Promise<void> {
+    await this.repository.delete(id);
   }
 }

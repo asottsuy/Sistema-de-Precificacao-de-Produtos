@@ -4,8 +4,8 @@ import {
   IsArray,
   ValidateNested,
   IsNotEmpty,
-  Min,
   IsPositive,
+  IsOptional,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 
@@ -24,6 +24,11 @@ export class CreateProductDto {
 
   @IsString()
   description!: string;
+
+  // 1. ADICIONE O CAMPO DE PREÇO DE VENDA AQUI
+  @IsNumber()
+  @IsPositive()
+  salePrice!: number;
 
   @IsArray()
   @ValidateNested({ each: true })

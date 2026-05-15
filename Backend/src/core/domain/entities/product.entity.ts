@@ -4,13 +4,43 @@ export class Product {
     public name: string,
     public description: string,
     public items: ProductItem[], // A lista de ingredientes que compõem o produto
+    public salePrice: number = 0,
   ) {}
   get basePrice(): number {
     return this.items.reduce((sum, item) => sum + item.subTotal, 0);
   }
   // Método de Negócio: Calcula o custo total baseado nos ingredientes
   get totalCost(): number {
-    return this.items.reduce((sum, item) => sum + item.ingredientCostPrice, 0);
+    // 🟢 Proteção: Se não houver itens cadastrados ou carregados, o custo é zero
+    if (!this.items || !Array.isArray(this.items)) {
+      return 0;
+    }
+
+    const totalCost = this.items.reduce((sum, item) => {
+      // Garante que o valor seja limpo de strings ou dízimas bizarras
+      const cost =
+        item && item.ingredientCostPrice ? Number(item.ingredientCostPrice) : 0;
+      return sum + cost;
+    }, 0);
+
+    return totalCost;
+  }
+
+  // Margem de Contribuição: Preço de Venda - Custo Total
+  get contributionMargin(): number {
+    return this.salePrice - this.totalCost;
+  }
+
+  // Margem de Lucro (%): (Lucro / Preço de Venda) * 100
+  get profitMarginPercentage(): number {
+    if (this.salePrice === 0) return 0;
+    return (this.contributionMargin / this.salePrice) * 100;
+  }
+
+  // Markup: Preço de Venda / Custo Total
+  get markup(): number {
+    if (this.totalCost === 0) return 0;
+    return this.salePrice / this.totalCost;
   }
 }
 

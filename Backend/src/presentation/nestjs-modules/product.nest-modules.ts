@@ -9,6 +9,9 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProductsController } from '@presentation/controllers/products.controller';
 import { IngredientsNestModule } from './ingredients.nest-module';
+import { GetProductUseCase } from '@core/application/use-cases/get-products.use-case';
+import { DeleteProductUseCase } from '@core/application/use-cases/delete-product.use-case';
+import { GetAllProductsUseCase } from '@core/application/use-cases/list-products.use-case';
 
 @Module({
   imports: [
@@ -19,6 +22,9 @@ import { IngredientsNestModule } from './ingredients.nest-module';
   controllers: [ProductsController],
   providers: [
     CreateProductUseCase,
+    GetProductUseCase,
+    DeleteProductUseCase,
+    GetAllProductsUseCase,
 
     { provide: ProductRepository, useClass: TypeOrmProductRepository },
   ],

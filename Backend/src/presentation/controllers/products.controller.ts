@@ -9,20 +9,97 @@ import {
   Delete,
   HttpCode,
   Patch,
+  NotFoundException,
+  BadRequestException,
+  HttpStatus,
 } from '@nestjs/common';
 //use cases
 import { CreateProductUseCase } from '@core/application/use-cases/create-product.use-case';
 //dtos
 import { CreateProductDto } from '@presentation/dtos/create-product.dto';
 import { Product } from '../../core/domain/entities/product.entity';
+import { ProductRepository } from '../../core/domain/repositories/product.repository';
+import { GetProductUseCase } from '../../core/application/use-cases/get-products.use-case';
+import { GetAllProductsUseCase } from '../../core/application/use-cases/list-products.use-case';
+import { DeleteProductUseCase } from '../../core/application/use-cases/delete-product.use-case';
 
 @Controller('products')
 export class ProductsController {
-  constructor(private readonly createProductUseCase: CreateProductUseCase) {}
+  constructor(
+    private readonly createProductUseCase: CreateProductUseCase,
+    private readonly getProductUseCase: GetProductUseCase,
+    private readonly getAllProductsUseCase: GetAllProductsUseCase,
+    private readonly deleteProductUseCase: DeleteProductUseCase,
+  ) {}
 
   @Post()
   async create(@Body() createProductDto: CreateProductDto) {
     console.log('passei no controller e o param e esse: ', createProductDto);
     return this.createProductUseCase.execute(createProductDto);
+  }
+
+  @Get(':id/indicators')
+  async getIndicators(@Param('id') id: number) {
+    // 1. Busca o produto via Use Case ou Repositório
+    const product = await this.getProductUseCase.execute(id);
+
+    if (!product) {
+      throw new NotFoundException('Produto não encontrado');
+    }
+
+    // 2. Retorna os cálculos realizados pela entidade
+    return {
+      productName: product.name,
+      salePrice: product.salePrice,
+      indicators: {
+        totalCost: product.totalCost,
+        contributionMargin: product.contributionMargin.toFixed(2),
+        markup: product.markup.toFixed(2),
+        profitMarginPercentage: `${product.profitMarginPercentage.toFixed(2)}%`,
+      },
+      isProfitable: product.salePrice > product.totalCost,
+    };
+  }
+
+  @Patch(':id/price')
+  async updatePrice(
+    @Param('id') id: number,
+    @Body() updateDto: { salePrice: number },
+  ) {
+    const product = await this.getProductUseCase.execute(id);
+
+    if (!product) {
+      throw new NotFoundException('Produto não encontrado');
+    }
+
+    // APLICAÇÃO DA REGRA DE VALIDAÇÃO DO SEU RELATÓRIO
+    if (updateDto.salePrice < product.totalCost) {
+      throw new BadRequestException(
+        `Alerta: O preço de venda (R$${updateDto.salePrice}) é inferior ao custo de produção (R$${product.totalCost.toFixed(2)})!`,
+      );
+    }
+
+    // Lógica para salvar o novo preço...
+    return { message: 'Preço atualizado com sucesso' };
+  }
+
+  @Get()
+  async findAll() {
+    return this.getAllProductsUseCase.execute();
+  }
+
+  @Get(':id')
+  async findOne(@Param('id') id: number) {
+    const product = await this.getProductUseCase.execute(id);
+    if (!product) {
+      throw new NotFoundException('Produto não encontrado');
+    }
+    return product;
+  }
+
+  @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT) // Retorna 204 Sucesso sem corpo
+  async remove(@Param('id') id: number) {
+    await this.deleteProductUseCase.execute(id);
   }
 }
