@@ -6,11 +6,11 @@ import { IngredientSchema } from '@infra/database/typeorm/entities/ingredient.sc
 import { IngredientRepository } from '@core/domain/repositories/ingredient.repository';
 import { TypeOrmIngredientRepository } from '@infra/database/typeorm/repositories/typeorm-ingredient.repository';
 //use cases
-import { CreateIngredientUseCase } from '@core/application/use-cases/create-ingredient.use-case';
-import { UpdateIngredientUseCase } from '@core/application/use-cases/update-ingredient.use-case';
-import { ListIngredientsUseCase } from '@core/application/use-cases/list-ingredient.use-case';
-import { GetIngredientUseCase } from '@core/application/use-cases/get-ingredients.use-case';
-import { DeleteIngredientUseCase } from '@core/application/use-cases/delete-ingredients.use-case';
+import { CreateIngredientUseCase } from '@core/application/use-cases/ingredient/create-ingredient.use-case';
+import { UpdateIngredientUseCase } from '@core/application/use-cases/ingredient/update-ingredient.use-case';
+import { ListIngredientsUseCase } from '@core/application/use-cases/ingredient/list-ingredient.use-case';
+import { GetIngredientUseCase } from '@core/application/use-cases/ingredient/get-ingredients.use-case';
+import { DeleteIngredientUseCase } from '@core/application/use-cases/ingredient/delete-ingredients.use-case';
 
 //Este arquivo é a "cola" do NestJS para o recurso de ingredientes. Ele registra a entidade no banco e liga o controller ao caso de uso.
 @Module({

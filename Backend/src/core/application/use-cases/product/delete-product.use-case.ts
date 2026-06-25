@@ -1,6 +1,6 @@
 // core/application/use-cases/delete-product.use-case.ts
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { ProductRepository } from '../../domain/repositories/product.repository';
+import { ProductRepository } from '@core/domain/repositories/product.repository';
 
 @Injectable()
 export class DeleteProductUseCase {

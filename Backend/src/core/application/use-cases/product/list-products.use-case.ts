@@ -1,7 +1,7 @@
 // core/application/use-cases/get-all-products.use-case.ts
 import { Injectable } from '@nestjs/common';
-import { ProductRepository } from '../../domain/repositories/product.repository';
-import { Product } from '../../domain/entities/product.entity';
+import { ProductRepository } from '@core/domain/repositories/product.repository';
+import { Product } from '@core/domain/entities/product.entity';
 
 @Injectable()
 export class GetAllProductsUseCase {

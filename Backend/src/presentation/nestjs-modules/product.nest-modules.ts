@@ -1,4 +1,4 @@
-import { CreateProductUseCase } from '@core/application/use-cases/create-product.use-case';
+import { CreateProductUseCase } from '@core/application/use-cases/product/create-product.use-case';
 import { ProductRepository } from '@core/domain/repositories/product.repository';
 import { TypeOrmProductRepository } from '@infra/database/typeorm/repositories/typeorm-product.repository';
 import {
@@ -8,10 +8,10 @@ import {
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProductsController } from '@presentation/controllers/products.controller';
-import { IngredientsNestModule } from './ingredients.nest-module';
-import { GetProductUseCase } from '@core/application/use-cases/get-products.use-case';
-import { DeleteProductUseCase } from '@core/application/use-cases/delete-product.use-case';
-import { GetAllProductsUseCase } from '@core/application/use-cases/list-products.use-case';
+import { IngredientsNestModule } from './ingredients.nest-modules';
+import { GetProductUseCase } from '@core/application/use-cases/product/get-products.use-case';
+import { DeleteProductUseCase } from '@core/application/use-cases/product/delete-product.use-case';
+import { GetAllProductsUseCase } from '@core/application/use-cases/product/list-products.use-case';
 
 @Module({
   imports: [

@@ -12,18 +12,22 @@ import {
   NotFoundException,
   BadRequestException,
   HttpStatus,
+  UseGuards,
 } from '@nestjs/common';
 //use cases
-import { CreateProductUseCase } from '@core/application/use-cases/create-product.use-case';
+import { CreateProductUseCase } from '@core/application/use-cases/product/create-product.use-case';
 //dtos
 import { CreateProductDto } from '@presentation/dtos/create-product.dto';
 import { Product } from '../../core/domain/entities/product.entity';
 import { ProductRepository } from '../../core/domain/repositories/product.repository';
-import { GetProductUseCase } from '../../core/application/use-cases/get-products.use-case';
-import { GetAllProductsUseCase } from '../../core/application/use-cases/list-products.use-case';
-import { DeleteProductUseCase } from '../../core/application/use-cases/delete-product.use-case';
+import { GetProductUseCase } from '../../core/application/use-cases/product/get-products.use-case';
+import { GetAllProductsUseCase } from '../../core/application/use-cases/product/list-products.use-case';
+import { DeleteProductUseCase } from '@core/application/use-cases/product/delete-product.use-case';
+//auth
+import { AuthGuard } from '@presentation/common/auth/guards/auth.guard';
 
 @Controller('products')
+@UseGuards(AuthGuard)
 export class ProductsController {
   constructor(
     private readonly createProductUseCase: CreateProductUseCase,

@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Ingredient } from '../../domain/entities/ingredient.entity';
+import { Ingredient } from '../../../domain/entities/ingredient.entity';
 import { IngredientRepository } from '@core/domain/repositories/ingredient.repository';
 import { UpdateIngredientDto } from '@presentation/dtos/create-ingredient.dto';
 

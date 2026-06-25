@@ -1,16 +1,30 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from '@presentation/controllers/app.controller';
-import { IngredientsNestModule } from '@presentation/nestjs-modules/ingredients.nest-module';
+import { IngredientsNestModule } from '@presentation/nestjs-modules/ingredients.nest-modules';
 import { ProductsNestModule } from '@presentation/nestjs-modules/product.nest-modules';
+import { AuthModule } from '@presentation/nestjs-modules/auth.nest-modules';
+import { UserModule } from '@presentation/nestjs-modules/user.nest-modules';
+import { ConfigService, ConfigModule } from '@nestjs/config';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
+    JwtModule.registerAsync({
+      global: true,
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        // Aqui buscamos a variável do seu arquivo .env com total segurança
+        secret: configService.get<string>('JWT_SECRET'),
+        signOptions: { expiresIn: '1d' },
+      }),
+    }),
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: 'localhost',
-      // Se você mudou para 5433 no docker-compose, use 5433 aqui.
-      // Se parou o serviço do Windows e usou o padrão, mantenha 5432.
       port: 5433,
       username: 'ttsuy', // Definido no seu docker-compose
       password: 'root', // Definido no seu docker-compose
@@ -20,6 +34,8 @@ import { ProductsNestModule } from '@presentation/nestjs-modules/product.nest-mo
     }),
     IngredientsNestModule,
     ProductsNestModule,
+    AuthModule,
+    UserModule,
   ],
   controllers: [AppController],
 })

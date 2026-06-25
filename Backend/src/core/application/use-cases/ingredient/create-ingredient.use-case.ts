@@ -1,6 +1,6 @@
 import { ConflictException, Injectable } from '@nestjs/common';
-import { Ingredient } from '../../domain/entities/ingredient.entity';
-import { CreateIngredientDto } from '../../../presentation/dtos/create-ingredient.dto';
+import { Ingredient } from '../../../domain/entities/ingredient.entity';
+import { CreateIngredientDto } from '../../../../presentation/dtos/create-ingredient.dto';
 import { IngredientRepository } from '@core/domain/repositories/ingredient.repository';
 
 @Injectable()

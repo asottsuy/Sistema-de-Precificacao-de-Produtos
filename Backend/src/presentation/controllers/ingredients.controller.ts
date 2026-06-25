@@ -9,20 +9,24 @@ import {
   Delete,
   HttpCode,
   Patch,
+  UseGuards,
 } from '@nestjs/common';
 //use cases
-import { CreateIngredientUseCase } from '@core/application/use-cases/create-ingredient.use-case';
-import { UpdateIngredientUseCase } from '@core/application/use-cases/update-ingredient.use-case';
-import { ListIngredientsUseCase } from '@core/application/use-cases/list-ingredient.use-case';
-import { GetIngredientUseCase } from '@core/application/use-cases/get-ingredients.use-case';
-import { DeleteIngredientUseCase } from '@core/application/use-cases/delete-ingredients.use-case';
+import { CreateIngredientUseCase } from '@core/application/use-cases/ingredient/create-ingredient.use-case';
+import { UpdateIngredientUseCase } from '@core/application/use-cases/ingredient/update-ingredient.use-case';
+import { ListIngredientsUseCase } from '@core/application/use-cases/ingredient/list-ingredient.use-case';
+import { GetIngredientUseCase } from '@core/application/use-cases/ingredient/get-ingredients.use-case';
+import { DeleteIngredientUseCase } from '@core/application/use-cases/ingredient/delete-ingredients.use-case';
 //dtos
 import {
   CreateIngredientDto,
   UpdateIngredientDto,
 } from '../dtos/create-ingredient.dto';
+//auth
+import { AuthGuard } from '@presentation/common/auth/guards/auth.guard';
 
 @Controller('ingredients')
+@UseGuards(AuthGuard)
 export class IngredientsController {
   constructor(
     private readonly createIngredientUseCase: CreateIngredientUseCase,
