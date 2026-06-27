@@ -5,6 +5,7 @@ import {
   OneToMany,
   ManyToOne,
   JoinColumn,
+  DeleteDateColumn,
 } from 'typeorm';
 import { IngredientSchema } from './ingredient.schema';
 @Entity('products')
@@ -24,6 +25,9 @@ export class ProductSchema {
   // Relação com a Ficha Técnica
   @OneToMany(() => ProductItemSchema, (item) => item.product, { cascade: true })
   items!: ProductItemSchema[];
+
+  @DeleteDateColumn()
+  deletedAt!: Date;
 }
 
 @Entity('product_items')
@@ -31,7 +35,9 @@ export class ProductItemSchema {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @ManyToOne(() => ProductSchema, (product) => product.items)
+  @ManyToOne(() => ProductSchema, (product) => product.items, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'product_id' })
   product!: ProductSchema;
 

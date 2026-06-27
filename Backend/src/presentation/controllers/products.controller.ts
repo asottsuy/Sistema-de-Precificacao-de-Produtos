@@ -102,8 +102,10 @@ export class ProductsController {
   }
 
   @Delete(':id')
-  @HttpCode(HttpStatus.NO_CONTENT) // Retorna 204 Sucesso sem corpo
-  async remove(@Param('id') id: number) {
+  async remove(@Param('id', ParseIntPipe) id: number) {
     await this.deleteProductUseCase.execute(id);
+    return {
+      message: 'Produto excluído com sucesso!',
+    };
   }
 }

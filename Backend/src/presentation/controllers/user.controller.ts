@@ -10,7 +10,8 @@ export class UserController {
   async create(@Body() createUserDto: CreateUserDto) {
     console.log('caiu no controller: ', createUserDto);
     try {
-      return this.criarUsuarioUseCase.execute(createUserDto);
+      const resultado = await this.criarUsuarioUseCase.execute(createUserDto);
+      return resultado;
     } catch (error: any) {
       // Traduz o erro de negócio do core para uma exceção HTTP do NestJS (400 Bad Request)
       throw new BadRequestException(error.message);

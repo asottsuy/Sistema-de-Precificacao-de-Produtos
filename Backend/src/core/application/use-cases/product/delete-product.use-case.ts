@@ -11,6 +11,7 @@ export class DeleteProductUseCase {
     if (!product) {
       throw new NotFoundException('Produto não encontrado para exclusão');
     }
+    console.log('product: ', product);
     await this.productRepository.delete(id);
   }
 }

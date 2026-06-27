@@ -88,6 +88,7 @@ export class TypeOrmProductRepository implements ProductRepository {
   }
 
   async delete(id: number): Promise<void> {
-    await this.repository.delete(id);
+    console.log('caiu no delete', id);
+    await this.repository.softDelete(id);
   }
 }

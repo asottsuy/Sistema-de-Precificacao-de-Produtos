@@ -20,6 +20,7 @@ export class CriarUsuarioUseCase {
   async execute(input: CriarUsuarioInput): Promise<CriarUsuarioOutput> {
     // 1. Valida se o e-mail já está cadastrado
     const usuarioExiste = await this.usuarioRepository.findByEmail(input.email);
+    console.log('ususario repedito');
     if (usuarioExiste) {
       throw new Error('E-mail já cadastrado no sistema');
     }

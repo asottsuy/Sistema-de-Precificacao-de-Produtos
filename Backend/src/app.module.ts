@@ -17,7 +17,6 @@ import { JwtModule } from '@nestjs/jwt';
       global: true,
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
-        // Aqui buscamos a variável do seu arquivo .env com total segurança
         secret: configService.get<string>('JWT_SECRET'),
         signOptions: { expiresIn: '1d' },
       }),
@@ -26,9 +25,9 @@ import { JwtModule } from '@nestjs/jwt';
       type: 'postgres',
       host: 'localhost',
       port: 5433,
-      username: 'ttsuy', // Definido no seu docker-compose
-      password: 'root', // Definido no seu docker-compose
-      database: 'precifica_db', // Definido no seu docker-compose
+      username: 'ttsuy',
+      password: 'root',
+      database: 'precifica_db',
       autoLoadEntities: true,
       synchronize: true, // Isso faz o TypeORM criar as tabelas automaticamente
     }),

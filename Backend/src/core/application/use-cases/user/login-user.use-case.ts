@@ -21,10 +21,13 @@ export class LoginUserUseCase {
 
   async execute(input: LoginInput): Promise<LoginOutput> {
     const user = await this.userRepository.findByEmail(input.email);
+    console.log('usuario, ', user);
     if (!user) {
+      console.log('caiu aqui, email inválido');
       throw new Error('Credenciais inválidas');
     }
     // 2. Compara a senha enviada com o hash que está na entidade de domínio
+    console.log('caiu aqui, senha invalida');
     const passwordBate = await bcrypt.compare(
       input.passwordHash,
       user.passwordHash,
