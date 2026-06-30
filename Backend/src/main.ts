@@ -2,11 +2,12 @@ import { NestFactory } from '@nestjs/core';
 //cria a instancia do nest baseada no meu appmodule
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
-import 'reflect-metadata';
 import { AllExceptionFilter } from './presentation/common/filters/http-exception.filter';
+import helmet from 'helmet';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.use(helmet());
   app.setGlobalPrefix('manager/');
   app.useGlobalFilters(new AllExceptionFilter());
   app.useGlobalPipes(
