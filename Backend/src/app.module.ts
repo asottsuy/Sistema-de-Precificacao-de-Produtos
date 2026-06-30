@@ -8,9 +8,18 @@ import { UserModule } from '@presentation/nestjs-modules/user.nest-modules';
 import { ConfigService, ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { CacheModule } from '@nestjs/cache-manager';
+import { ThrottlerModule } from '@nestjs/throttler';
+import { APP_GUARD } from '@nestjs/core';
+import { ThrottlerGuard } from '@nestjs/throttler';
 
 @Module({
   imports: [
+    ThrottlerModule.forRoot([
+      {
+        ttl: 60000, // Tempo de vida (Time-To-Live) em milissegundos (60s)
+        limit: 10, // Máximo de requisições por IP dentro do TTL
+      },
+    ]),
     ConfigModule.forRoot({
       isGlobal: true,
     }),
@@ -41,6 +50,12 @@ import { CacheModule } from '@nestjs/cache-manager';
     ProductsNestModule,
     AuthModule,
     UserModule,
+  ],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
   ],
   controllers: [AppController],
 })

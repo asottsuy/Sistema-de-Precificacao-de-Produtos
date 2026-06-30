@@ -8,6 +8,7 @@ import {
 } from '@nestjs/common';
 import { LoginUserUseCase } from '@core/application/use-cases/user/login-user.use-case';
 import { LoginDto } from '@presentation/dtos/login-auth.dto';
+import { Throttle } from '@nestjs/throttler';
 
 @Controller('auth')
 export class AuthController {
@@ -16,6 +17,7 @@ export class AuthController {
 
   @HttpCode(HttpStatus.OK)
   @Post('login')
+  @Throttle({ default: { limit: 3, ttl: 60000 } })
   async login(@Body() loginDto: LoginDto) {
     try {
       // Passa os dados brutos da requisição HTTP para as regras de negócio
