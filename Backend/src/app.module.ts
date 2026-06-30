@@ -7,11 +7,17 @@ import { AuthModule } from '@presentation/nestjs-modules/auth.nest-modules';
 import { UserModule } from '@presentation/nestjs-modules/user.nest-modules';
 import { ConfigService, ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
+import { CacheModule } from '@nestjs/cache-manager';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+    }),
+    CacheModule.register({
+      isGlobal: true,
+      ttl: 10000,
+      max: 100,
     }),
     JwtModule.registerAsync({
       global: true,

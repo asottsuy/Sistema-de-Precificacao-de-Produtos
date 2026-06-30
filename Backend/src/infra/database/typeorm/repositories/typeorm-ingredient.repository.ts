@@ -61,6 +61,7 @@ export class TypeOrmIngredientRepository implements IngredientRepository {
   }
 
   async findById(id: number): Promise<Ingredient | null> {
+    console.log('ingrediente foi buscado!!');
     const schema = await this.repository.findOneBy({ id });
     if (!schema) return null;
 

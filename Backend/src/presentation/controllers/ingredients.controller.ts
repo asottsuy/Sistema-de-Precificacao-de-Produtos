@@ -3,13 +3,12 @@ import {
   Param,
   Post,
   Body,
-  UsePipes,
   Get,
   ParseIntPipe,
   Delete,
-  HttpCode,
   Patch,
   UseGuards,
+  Inject,
 } from '@nestjs/common';
 //use cases
 import { CreateIngredientUseCase } from '@core/application/use-cases/ingredient/create-ingredient.use-case';
@@ -17,13 +16,18 @@ import { UpdateIngredientUseCase } from '@core/application/use-cases/ingredient/
 import { ListIngredientsUseCase } from '@core/application/use-cases/ingredient/list-ingredient.use-case';
 import { GetIngredientUseCase } from '@core/application/use-cases/ingredient/get-ingredients.use-case';
 import { DeleteIngredientUseCase } from '@core/application/use-cases/ingredient/delete-ingredients.use-case';
-//dtos
 import {
   CreateIngredientDto,
   UpdateIngredientDto,
 } from '../dtos/create-ingredient.dto';
-//auth
 import { AuthGuard } from '@presentation/common/auth/guards/auth.guard';
+import {
+  CacheTTL,
+  CACHE_MANAGER,
+  CacheInterceptor,
+} from '@nestjs/cache-manager';
+import { UseInterceptors } from '@nestjs/common';
+import type { Cache } from 'cache-manager';
 
 @Controller('ingredients')
 @UseGuards(AuthGuard)
@@ -34,6 +38,7 @@ export class IngredientsController {
     private readonly getIngredientUseCase: GetIngredientUseCase,
     private readonly deleteIngredientUseCase: DeleteIngredientUseCase,
     private readonly updateIngredientUseCase: UpdateIngredientUseCase,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
   @Post()
@@ -46,7 +51,9 @@ export class IngredientsController {
     return this.listIngredientsUseCase.execute();
   }
 
+  @UseInterceptors(CacheInterceptor)
   @Get(':id')
+  @CacheTTL(60000)
   async findOne(@Param('id', ParseIntPipe) id: number) {
     return this.getIngredientUseCase.execute(id);
   }
@@ -57,6 +64,7 @@ export class IngredientsController {
     await this.deleteIngredientUseCase.execute(id);
 
     // Agora o front-end pode capturar essa string para um Toast ou Alerta
+    await this.invalidarCacheIngrediente(id);
     return {
       message: 'Ingrediente excluído com sucesso!',
     };
@@ -67,6 +75,14 @@ export class IngredientsController {
     @Param('id', ParseIntPipe) id: number,
     @Body() updateIngredientDto: UpdateIngredientDto,
   ) {
+    await this.invalidarCacheIngrediente(id);
     return this.updateIngredientUseCase.execute(id, updateIngredientDto);
+  }
+
+  private async invalidarCacheIngrediente(id: number): Promise<void> {
+    const cacheKey = `/ingredients/${id}`;
+    console.log(`Caiou aquiiiii no uivalidar chaceh ingrendietn: ${cacheKey} `);
+    await this.cacheManager.del(cacheKey);
+    console.log(`Cache limpo para a chave: ${cacheKey} 🧹`);
   }
 }
